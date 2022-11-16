@@ -1,4 +1,4 @@
-$SiteURL = "https://cfecontracting.sharepoint.com/sites/<site url here>"
+$SiteURL = "https://domain.sharepoint.com/sites/<site url here>"
 $DeletedBy = "<user email here>"
 $DeletedOnDate = "MM/DD/YYYY" # has to be in format MM/DD/YYYY, example for the 12th of january 2022: 01/12/2022
 
@@ -8,8 +8,11 @@ if (Get-Module -ListAvailable -Name PnP.PowerShell) {
     Connect-PnPOnline -Url $SiteURL -Interactive
 
 } else {
+
+    # Is the user admin?
     $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 
+    # If the user is an admin, install the module for them. If not : ask them to install it.
     if( $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)  ) {
         Write-Host "LOG - Module does not exist. You're in elevated Powershell, good. I'm installing the module for you."
         Install-Module PnP.PowerShell
@@ -32,7 +35,7 @@ $DeletedItems | ForEach-Object {
 
     if ($fileExists) {
 
-        Write-Host "$title exists, skipping restore"
+        Write-Host "$path exists, skipping restore"
 
     } else {
 
